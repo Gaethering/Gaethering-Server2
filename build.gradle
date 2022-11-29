@@ -1,0 +1,132 @@
+buildscript {
+    ext {
+        springBootVersion = '2.7.6'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.15.RELEASE"
+    }
+}
+
+subprojects {
+    group = 'com.multi'
+    version = '0.0.1-SNAPSHOT'
+
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'jacoco'
+
+    sourceCompatibility = 11
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    }
+
+    tasks.named('test') {
+        useJUnitPlatform()
+        finalizedBy 'jacocoTestReport'
+    }
+
+    jacocoTestReport {
+        reports {
+            html.enabled true
+            csv.enabled true
+            xml.enabled true
+        }
+
+        afterEvaluate {
+            classDirectories.setFrom(
+                    files(classDirectories.files.collect {
+                        fileTree(dir: it, excludes: [
+                                "**/*Application*",
+                                "**/*Exception*",
+                                "**/*Dto*",
+                                "**/*Response*",
+                                "**/*Request*",
+                                "**/*Config*",
+                                "**/*Input*",
+                                "**/*Interceptor*",
+                                "**/*Error*"
+                        ])
+                    })
+            )
+        }
+    }
+
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                element = 'CLASS'
+                enabled = true
+
+                limit {
+                    counter = 'LINE'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.60
+                }
+
+                limit {
+                    counter = 'BRANCH'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.60
+                }
+
+                // 커버리지 체크를 제외할 클래스들
+                excludes = [
+                        '**.*Application*',
+                        '**.*Exception*',
+                        '**.*Dto*',
+                        '**.*Response*',
+                        '**.*Request*',
+                        '**.*Config*',
+                        '**.*Input*',
+                        "**.*Interceptor*",
+                        "**/*Error*"
+                ]
+            }
+        }
+    }
+
+}
+
+project(':module-core') {
+    dependencies {
+    }
+}
+
+project(':module-domain') {
+    dependencies {
+        implementation project(':module-core')
+    }
+}
+
+project(':module-member') {
+    dependencies {
+        implementation project(':module-core')
+        implementation project(':module-domain')
+    }
+}
+
+project(':module-board') {
+    dependencies {
+        implementation project(':module-core')
+        implementation project(':module-domain')
+    }
+}
+
+project(':module-chat') {
+    dependencies {
+        implementation project(':module-core')
+        implementation project(':module-domain')
+    }
+}
