@@ -1,5 +1,7 @@
 package com.gaethering.modulemember.controller;
 
+import com.gaethering.modulemember.dto.ConfirmEmailRequest;
+import com.gaethering.modulemember.dto.ConfirmEmailResponse;
 import com.gaethering.modulemember.dto.EmailAuthRequest;
 import com.gaethering.modulemember.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -24,4 +26,16 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PostMapping("/email-confirm")
+    public ResponseEntity<ConfirmEmailResponse> confirmEmailAuthCode(
+        @RequestBody ConfirmEmailRequest confirmEmailRequest
+    ) {
+        String authEmail = memberService.confirmEmailAuthCode(confirmEmailRequest.getCode(),
+            confirmEmailRequest.getEmail());
+
+        return ResponseEntity.ok(ConfirmEmailResponse.builder()
+            .email(authEmail)
+            .isEmailAuth(true)
+            .build());
+    }
 }
