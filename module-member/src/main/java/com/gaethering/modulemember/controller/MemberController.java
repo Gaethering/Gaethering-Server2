@@ -1,5 +1,7 @@
 package com.gaethering.modulemember.controller;
 
+import com.gaethering.modulemember.dto.EmailAuthRequest;
+import com.gaethering.modulemember.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
