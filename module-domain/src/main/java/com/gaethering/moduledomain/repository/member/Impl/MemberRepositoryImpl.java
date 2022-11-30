@@ -20,8 +20,8 @@ public class MemberRepositoryImpl extends Querydsl4RepositorySupport implements
     public Optional<Member> findByEmail(String email) {
         return Optional.ofNullable(
             selectFrom(member)
-                .join(member.pets, pet)
-                .join(member.memberProfile, memberProfile)
+                .join(member.pets, pet).fetchJoin()
+                .join(member.memberProfile, memberProfile).fetchJoin()
                 .where(member.email.eq(email))
                 .fetchOne());
     }
