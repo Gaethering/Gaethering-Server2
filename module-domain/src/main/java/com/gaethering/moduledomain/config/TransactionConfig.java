@@ -1,4 +1,4 @@
-package com.gaethering.modulemember.config;
+package com.gaethering.moduledomain.config;
 
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
