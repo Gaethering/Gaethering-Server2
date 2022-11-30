@@ -12,7 +12,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,8 +48,12 @@ public class Member extends BaseTimeEntity {
 
     private boolean isEmailAuth;
 
+    @OneToOne
+    @JoinColumn(name = "member_profile_id")
+    private MemberProfile memberProfile;
+
     @OneToMany(mappedBy = "member")
-    List<Pet> pets = new ArrayList<>();
+    private List<Pet> pets = new ArrayList<>();
 
     public void addPet(Pet pet) {
         pet.setMember(this);
