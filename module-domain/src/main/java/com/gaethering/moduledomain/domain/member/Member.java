@@ -1,6 +1,7 @@
 package com.gaethering.moduledomain.domain.member;
 
 import com.gaethering.moduledomain.domain.basic.BaseTimeEntity;
+import com.gaethering.moduledomain.domain.type.MemberRole;
 import com.gaethering.moduledomain.domain.type.MemberStatus;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -46,6 +47,8 @@ public class Member extends BaseTimeEntity {
     private LocalDateTime accessDate;
 
     private boolean isEmailAuth;
+
+    private MemberRole role;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_profile_id")
