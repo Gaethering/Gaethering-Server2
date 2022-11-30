@@ -1,5 +1,6 @@
 package com.gaethering.modulemember.service;
 
+import com.gaethering.moduledomain.repository.member.MemberRepository;
 import com.gaethering.modulemember.util.RedisUtil;
 import java.util.UUID;
 import javax.mail.MessagingException;
