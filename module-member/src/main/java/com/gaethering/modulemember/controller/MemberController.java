@@ -30,11 +30,9 @@ public class MemberController {
     public ResponseEntity<ConfirmEmailResponse> confirmEmailAuthCode(
         @RequestBody ConfirmEmailRequest confirmEmailRequest
     ) {
-        String authEmail = memberService.confirmEmailAuthCode(confirmEmailRequest.getCode(),
-            confirmEmailRequest.getEmail());
+        memberService.confirmEmailAuthCode(confirmEmailRequest.getCode());
 
         return ResponseEntity.ok(ConfirmEmailResponse.builder()
-            .email(authEmail)
             .isEmailAuth(true)
             .build());
     }

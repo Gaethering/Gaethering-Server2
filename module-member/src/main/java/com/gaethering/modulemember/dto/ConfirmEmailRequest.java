@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ConfirmEmailRequest {
 
-    private String email;
-
     private String code;
 
 }

@@ -1,6 +1,7 @@
 package com.gaethering.modulemember.service;
 
 import com.gaethering.moduledomain.repository.member.MemberRepository;
+import com.gaethering.modulemember.exception.InvalidEmailAuthCodeException;
 import com.gaethering.modulemember.util.RedisUtil;
 import java.util.UUID;
 import javax.mail.MessagingException;
@@ -42,18 +43,13 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public String confirmEmailAuthCode(String code, String email) {
+    public void confirmEmailAuthCode(String code) {
+
         String authEmail = redisUtil.getData(code);
 
         if (ObjectUtils.isEmpty(authEmail)) {
-            throw new RuntimeException("인증 코드 오류");
+            throw new InvalidEmailAuthCodeException();
         }
-
-        if (!email.equals(authEmail)) {
-            throw new RuntimeException("이메일이 다름");
-        }
-
-        return authEmail;
     }
 
     private static void makeAuthEmail(String email, String authCode, MimeMessage message)

@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ConfirmEmailResponse {
 
-    private String email;
-
     private boolean isEmailAuth;
 
 }
