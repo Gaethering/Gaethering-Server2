@@ -21,7 +21,7 @@ jobs:
         id: jacoco
         uses: codecov/codecov-action@v1
         with:
-          paths: ${{ github.workspace }}/module-member/build/reports/jacoco/test/jacocoTestReport.xml
+          file: ${{ github.workspace }}/module-member/build/reports/jacoco/test/jacocoTestReport.xml
           token: ${{ secrets.ACTIONS_TOKEN }}
 
       - name: Generate JaCoCo Badge
