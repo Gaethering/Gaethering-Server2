@@ -10,9 +10,11 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberServiceImpl implements MemberService {
 
     private final RedisUtil redisUtil;
@@ -36,6 +38,22 @@ public class MemberServiceImpl implements MemberService {
         }
 
         redisUtil.setDataExpire(authCode, email, 60 * 5L);
+    }
+
+    @Override
+    @Transactional
+    public String confirmEmailAuthCode(String code, String email) {
+        String authEmail = redisUtil.getData(code);
+
+        if (ObjectUtils.isEmpty(authEmail)) {
+            throw new RuntimeException("인증 코드 오류");
+        }
+
+        if (!email.equals(authEmail)) {
+            throw new RuntimeException("이메일이 다름");
+        }
+
+        return authEmail;
     }
 
     private static void makeAuthEmail(String email, String authCode, MimeMessage message)
