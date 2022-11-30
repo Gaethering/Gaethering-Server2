@@ -48,6 +48,7 @@ public class Member extends BaseTimeEntity {
 
     private boolean isEmailAuth;
 
+    @Enumerated(EnumType.STRING)
     private MemberRole role;
 
     @OneToOne(fetch = FetchType.LAZY)
