@@ -1,6 +1,7 @@
 package com.gaethering.modulemember.service;
 
 import com.gaethering.moduledomain.repository.member.MemberRepository;
+import com.gaethering.modulemember.exception.DuplicatedEmailException;
 import com.gaethering.modulemember.exception.InvalidEmailAuthCodeException;
 import com.gaethering.modulemember.util.RedisUtil;
 import java.util.UUID;
@@ -26,6 +27,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void sendEmailAuthCode(String email) {
+
+        if (memberRepository.existsByEmail(email)) {
+            throw new DuplicatedEmailException();
+        }
 
         String authCode = UUID.randomUUID().toString();
 
