@@ -33,7 +33,7 @@ public class MemberController {
         memberService.confirmEmailAuthCode(confirmEmailRequest.getCode());
 
         return ResponseEntity.ok(ConfirmEmailResponse.builder()
-            .isEmailAuth(true)
+            .emailAuth(true)
             .build());
     }
 }

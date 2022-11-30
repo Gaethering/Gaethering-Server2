@@ -1,5 +1,6 @@
 package com.gaethering.modulemember.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ConfirmEmailResponse {
 
-    private boolean isEmailAuth;
+    @JsonProperty("isEmailAuth")
+    private boolean emailAuth;
 
 }
