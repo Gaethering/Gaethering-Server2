@@ -3,6 +3,7 @@ package com.gaethering.modulemember.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.gaethering.moduledomain.config.JpaConfig;
+import com.gaethering.moduledomain.config.QuerydslConfig;
 import com.gaethering.moduledomain.domain.member.Member;
 import com.gaethering.moduledomain.domain.member.MemberProfile;
 import com.gaethering.moduledomain.domain.member.Pet;
@@ -13,6 +14,7 @@ import com.gaethering.moduledomain.repository.pet.PetRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
-@Import(JpaConfig.class)
+@Import({JpaConfig.class, QuerydslConfig.class})
 @Transactional
 public class MemberRepositoryTest {
 
@@ -31,6 +33,8 @@ public class MemberRepositoryTest {
     private MemberProfileRepository memberProfileRepository;
     @Autowired
     private PetRepository petRepository;
+    @Autowired
+    private EntityManager em;
 
     private List<Pet> pets;
     private MemberProfile memberProfile;
@@ -63,6 +67,8 @@ public class MemberRepositoryTest {
         petRepository.saveAll(pets);
         memberProfileRepository.save(memberProfile);
         memberRepository.save(member);
+        em.flush();
+        em.clear();
     }
 
     @Test
@@ -87,10 +93,25 @@ public class MemberRepositoryTest {
 
         //then
         assertThat(optionalMember.isPresent()).isTrue();
-        assertThat(optionalMember.get().getEmail()).isEqualTo(member.getEmail());
-        assertThat(optionalMember.get().getMemberProfile()).isEqualTo(memberProfile);
-        for (Pet pet : pets) {
-            assertThat(optionalMember.get().getPets().contains(pet)).isTrue();
+        Member member = optionalMember.get();
+        assertThat(member.getEmail()).isEqualTo(member.getEmail());
+        assertMemberProfile(member);
+        assertPets(member);
+    }
+
+    private void assertMemberProfile(Member member) {
+        assertThat(member.getMemberProfile().getPhoneNumber()).isEqualTo(
+            memberProfile.getPhoneNumber());
+        assertThat(member.getMemberProfile().getMannerDegree()).isEqualTo(
+            memberProfile.getMannerDegree());
+        assertThat(member.getMemberProfile().getGender()).isEqualTo(
+            memberProfile.getGender());
+    }
+
+    private void assertPets(Member member) {
+        for (int i = 0; i < pets.size(); i++) {
+            assertThat(member.getPets().get(i).getName()).isEqualTo(
+                pets.get(i).getName());
         }
     }
 }
