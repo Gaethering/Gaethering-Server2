@@ -30,8 +30,6 @@ class MemberProfileServiceTest {
     @InjectMocks
     private MemberProfileServiceImpl memberProfileService;
 
-    private List<Pet> pets;
-    private MemberProfile memberProfile;
     private Member member;
 
     @BeforeEach
@@ -46,8 +44,8 @@ class MemberProfileServiceTest {
             .name("pet2")
             .isRepresentative(false)
             .build();
-        pets = List.of(pet1, pet2);
-        memberProfile = MemberProfile.builder()
+        List<Pet> pets = List.of(pet1, pet2);
+        MemberProfile memberProfile = MemberProfile.builder()
             .id(1L)
             .gender(Gender.MALE)
             .phoneNumber("010-0000-0000")
@@ -84,12 +82,24 @@ class MemberProfileServiceTest {
         OwnProfileResponse profile = memberProfileService.getOwnProfile(anyString());
 
         //then
+        assertMember(profile);
+        assertMemberProfile(profile);
+        assertPets(profile);
+    }
+
+    private void assertMember(OwnProfileResponse profile) {
         assertThat(profile.getEmail()).isEqualTo(member.getEmail());
         assertThat(profile.getNickname()).isEqualTo(member.getNickname());
         assertThat(profile.getPhoneNumber()).isEqualTo(member.getMemberProfile().getPhoneNumber());
+    }
+
+    private void assertMemberProfile(OwnProfileResponse profile) {
         assertThat(profile.getGender()).isEqualTo(member.getMemberProfile().getGender());
         assertThat(profile.getMannerDegree()).isEqualTo(
             member.getMemberProfile().getMannerDegree());
+    }
+
+    private void assertPets(OwnProfileResponse profile) {
         assertThat(profile.getPetCount()).isEqualTo(member.getPets().size());
         assertThat(profile.getPets().get(0).getId()).isEqualTo(member.getPets().get(0).getId());
         assertThat(profile.getPets().get(1).getId()).isEqualTo(member.getPets().get(1).getId());
