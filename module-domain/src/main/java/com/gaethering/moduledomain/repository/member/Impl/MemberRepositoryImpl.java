@@ -7,6 +7,7 @@ import static com.gaethering.moduledomain.domain.member.QPet.pet;
 import com.gaethering.moduledomain.domain.member.Member;
 import com.gaethering.moduledomain.repository.member.CustomMemberRepository;
 import com.gaethering.moduledomain.repository.support.Querydsl4RepositorySupport;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import java.util.Optional;
 
 public class MemberRepositoryImpl extends Querydsl4RepositorySupport implements
@@ -22,7 +23,11 @@ public class MemberRepositoryImpl extends Querydsl4RepositorySupport implements
             selectFrom(member)
                 .join(member.pets, pet).fetchJoin()
                 .join(member.memberProfile, memberProfile).fetchJoin()
-                .where(member.email.eq(email))
+                .where(emailEqual(email))
                 .fetchOne());
+    }
+
+    private static BooleanExpression emailEqual(String email) {
+        return member.email.eq(email);
     }
 }
