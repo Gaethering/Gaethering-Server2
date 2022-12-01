@@ -1,5 +1,7 @@
 package com.gaethering.modulemember.service;
 
+import com.gaethering.moduledomain.domain.member.Member;
+import com.gaethering.moduledomain.repository.follow.FollowRepository;
 import com.gaethering.moduledomain.repository.member.MemberRepository;
 import com.gaethering.modulemember.dto.OwnProfileResponse;
 import com.gaethering.modulemember.exception.member.MemberNotFoundException;
@@ -13,10 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberProfileServiceImpl implements MemberProfileService {
 
     private final MemberRepository memberRepository;
+    private final FollowRepository followRepository;
 
     @Override
     public OwnProfileResponse getOwnProfile(String email) {
-        return OwnProfileResponse.of(
-            memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new));
+        Member member = memberRepository.findByEmail(email)
+            .orElseThrow(MemberNotFoundException::new);
+        Long followerCount = followRepository.countByFollowee(member);
+        Long followingCount = followRepository.countByFollower(member);
+        return OwnProfileResponse.of(member, followerCount, followingCount);
     }
 }

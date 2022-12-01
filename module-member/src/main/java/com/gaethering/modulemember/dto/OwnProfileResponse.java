@@ -18,10 +18,12 @@ public class OwnProfileResponse {
     private String phoneNumber;
     private Gender gender;
     private float mannerDegree;
+    private Long followerCount;
+    private Long followingCount;
     private int petCount;
     private List<ProfilePetResponse> pets;
 
-    public static OwnProfileResponse of(Member member) {
+    public static OwnProfileResponse of(Member member, Long followerCount, Long followingCount) {
         List<ProfilePetResponse> pets = member.getPets().stream().map(ProfilePetResponse::of)
             .collect(Collectors.toList());
         return OwnProfileResponse.builder()
@@ -30,6 +32,8 @@ public class OwnProfileResponse {
             .phoneNumber(member.getMemberProfile().getPhoneNumber())
             .gender(member.getMemberProfile().getGender())
             .mannerDegree(member.getMemberProfile().getMannerDegree())
+            .followerCount(followerCount)
+            .followingCount(followingCount)
             .petCount(member.getPets().size())
             .pets(pets)
             .build();
