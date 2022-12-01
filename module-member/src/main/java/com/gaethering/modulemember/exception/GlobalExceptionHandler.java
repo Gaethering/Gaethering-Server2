@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
             .message(e.getMessage())
             .build();
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MailSendException.class)
