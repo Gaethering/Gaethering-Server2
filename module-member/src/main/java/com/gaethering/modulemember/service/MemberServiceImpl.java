@@ -20,6 +20,8 @@ import org.springframework.util.ObjectUtils;
 public class MemberServiceImpl implements MemberService {
 
     private static final String EMAIL_ENCODING = "utf-8";
+    private static final String EMAIL_SUBJECT = "Gaethering 인증코드";
+
 
     private final RedisUtil redisUtil;
     private final JavaMailSender javaMailSender;
@@ -65,8 +67,8 @@ public class MemberServiceImpl implements MemberService {
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, EMAIL_ENCODING);
 
         mimeMessageHelper.setTo(email);
-        mimeMessageHelper.setSubject("인증코드");
-        mimeMessageHelper.setText("회원가입 인증코드: " + authCode + " 입니다.");
+        mimeMessageHelper.setSubject(EMAIL_SUBJECT);
+        mimeMessageHelper.setText(authCode);
     }
 
 }
