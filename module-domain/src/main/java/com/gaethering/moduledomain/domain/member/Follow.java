@@ -1,7 +1,6 @@
-package com.gaethering.moduledomain.domain;
+package com.gaethering.moduledomain.domain.member;
 
 import com.gaethering.moduledomain.domain.basic.BaseTimeEntity;
-import com.gaethering.moduledomain.domain.member.Member;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

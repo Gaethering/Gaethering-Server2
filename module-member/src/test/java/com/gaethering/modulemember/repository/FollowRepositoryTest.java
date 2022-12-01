@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.gaethering.moduledomain.config.JpaConfig;
 import com.gaethering.moduledomain.config.QuerydslConfig;
-import com.gaethering.moduledomain.domain.Follow;
+import com.gaethering.moduledomain.domain.member.Follow;
 import com.gaethering.moduledomain.domain.member.Member;
 import com.gaethering.moduledomain.repository.follow.FollowRepository;
 import com.gaethering.moduledomain.repository.member.MemberRepository;
