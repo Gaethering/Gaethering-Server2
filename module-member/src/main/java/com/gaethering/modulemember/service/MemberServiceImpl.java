@@ -19,6 +19,8 @@ import org.springframework.util.ObjectUtils;
 @Transactional(readOnly = true)
 public class MemberServiceImpl implements MemberService {
 
+    private static final String EMAIL_ENCODING = "utf-8";
+
     private final RedisUtil redisUtil;
     private final JavaMailSender javaMailSender;
 
@@ -60,7 +62,7 @@ public class MemberServiceImpl implements MemberService {
     private static void makeAuthEmail(String email, String authCode, MimeMessage message)
         throws MessagingException {
 
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, "utf-8");
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, EMAIL_ENCODING);
 
         mimeMessageHelper.setTo(email);
         mimeMessageHelper.setSubject("인증코드");
