@@ -66,7 +66,7 @@ public class MemberRepositoryTest {
         }
         petRepository.saveAll(pets);
         memberProfileRepository.save(memberProfile);
-        memberRepository.save(member);
+        member = memberRepository.save(member);
         em.flush();
         em.clear();
     }
@@ -93,24 +93,52 @@ public class MemberRepositoryTest {
 
         //then
         assertThat(optionalMember.isPresent()).isTrue();
-        Member member = optionalMember.get();
-        assertThat(member.getEmail()).isEqualTo(member.getEmail());
-        assertMemberProfile(member);
-        assertPets(member);
+        Member testMember = optionalMember.get();
+        assertThat(testMember.getEmail()).isEqualTo(member.getEmail());
+        assertMemberProfile(testMember);
+        assertPets(testMember);
     }
 
-    private void assertMemberProfile(Member member) {
-        assertThat(member.getMemberProfile().getPhoneNumber()).isEqualTo(
+    @Test
+    public void findByIdFailure() {
+        //given
+        Long id = Long.MAX_VALUE;
+
+        //when
+        Optional<Member> optionalMember = memberRepository.findById(id);
+
+        //then
+        assertThat(optionalMember.isPresent()).isFalse();
+    }
+
+    @Test
+    public void findByIdSuccess() {
+        //given
+        Long id = member.getId();
+
+        //when
+        Optional<Member> optionalMember = memberRepository.findById(id);
+
+        //then
+        assertThat(optionalMember.isPresent()).isTrue();
+        Member testMember = optionalMember.get();
+        assertThat(testMember.getEmail()).isEqualTo(member.getEmail());
+        assertMemberProfile(testMember);
+        assertPets(testMember);
+    }
+
+    private void assertMemberProfile(Member testMember) {
+        assertThat(testMember.getMemberProfile().getPhoneNumber()).isEqualTo(
             memberProfile.getPhoneNumber());
-        assertThat(member.getMemberProfile().getMannerDegree()).isEqualTo(
+        assertThat(testMember.getMemberProfile().getMannerDegree()).isEqualTo(
             memberProfile.getMannerDegree());
-        assertThat(member.getMemberProfile().getGender()).isEqualTo(
+        assertThat(testMember.getMemberProfile().getGender()).isEqualTo(
             memberProfile.getGender());
     }
 
-    private void assertPets(Member member) {
+    private void assertPets(Member testMember) {
         for (int i = 0; i < pets.size(); i++) {
-            assertThat(member.getPets().get(i).getName()).isEqualTo(
+            assertThat(testMember.getPets().get(i).getName()).isEqualTo(
                 pets.get(i).getName());
         }
     }
