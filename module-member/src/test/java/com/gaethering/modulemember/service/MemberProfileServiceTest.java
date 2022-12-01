@@ -3,6 +3,7 @@ package com.gaethering.modulemember.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
@@ -12,6 +13,7 @@ import com.gaethering.moduledomain.domain.member.Pet;
 import com.gaethering.moduledomain.domain.type.Gender;
 import com.gaethering.moduledomain.repository.follow.FollowRepository;
 import com.gaethering.moduledomain.repository.member.MemberRepository;
+import com.gaethering.modulemember.dto.OtherProfileResponse;
 import com.gaethering.modulemember.dto.OwnProfileResponse;
 import com.gaethering.modulemember.exception.errorcode.MemberErrorCode;
 import com.gaethering.modulemember.exception.member.MemberNotFoundException;
@@ -92,28 +94,66 @@ class MemberProfileServiceTest {
         OwnProfileResponse profile = memberProfileService.getOwnProfile(anyString());
 
         //then
-        assertMember(profile);
-        assertMemberProfile(profile);
-        assertPets(profile);
+        assertOwnProfile(profile, followerCount, followingCount);
+    }
+
+    @Test
+    public void getOtherProfileFailure() {
+        //given
+        given(memberRepository.findById(anyLong()))
+            .willReturn(Optional.empty());
+
+        //when
+        //then
+        MemberNotFoundException exception = assertThrows(MemberNotFoundException.class,
+            () -> memberProfileService.getOtherProfile(anyLong()));
+        assertThat(exception.getErrorCode()).isEqualTo(MemberErrorCode.MEMBER_NOT_FOUND);
+    }
+
+    @Test
+    public void getOtherProfileSuccess() {
+        //given
+        Long followerCount = 3L;
+        Long followingCount = 30L;
+        given(memberRepository.findById(anyLong()))
+            .willReturn(Optional.of(member));
+        given(followRepository.countByFollowee(any(member.getClass())))
+            .willReturn(followerCount);
+        given(followRepository.countByFollower(any(member.getClass())))
+            .willReturn(followingCount);
+
+        //when
+        OtherProfileResponse profile = memberProfileService.getOtherProfile(anyLong());
+
+        //then
+        assertOtherProfile(profile, followerCount, followingCount);
+    }
+
+    private void assertOwnProfile(OwnProfileResponse profile, Long followerCount, Long followingCount) {
+        assertThat(profile.getEmail()).isEqualTo(member.getEmail());
+        assertThat(profile.getNickname()).isEqualTo(member.getNickname());
+        assertThat(profile.getPhoneNumber()).isEqualTo(member.getMemberProfile().getPhoneNumber());
+        assertThat(profile.getGender()).isEqualTo(member.getMemberProfile().getGender());
+        assertThat(profile.getMannerDegree()).isEqualTo(
+            member.getMemberProfile().getMannerDegree());
+        assertThat(profile.getPetCount()).isEqualTo(member.getPets().size());
+        assertThat(profile.getPets().get(0).getId()).isEqualTo(member.getPets().get(0).getId());
+        assertThat(profile.getPets().get(1).getId()).isEqualTo(member.getPets().get(1).getId());
         assertThat(profile.getFollowerCount()).isEqualTo(followerCount);
         assertThat(profile.getFollowingCount()).isEqualTo(followingCount);
     }
 
-    private void assertMember(OwnProfileResponse profile) {
+    private void assertOtherProfile(OtherProfileResponse profile, Long followerCount, Long followingCount) {
         assertThat(profile.getEmail()).isEqualTo(member.getEmail());
         assertThat(profile.getNickname()).isEqualTo(member.getNickname());
-        assertThat(profile.getPhoneNumber()).isEqualTo(member.getMemberProfile().getPhoneNumber());
-    }
-
-    private void assertMemberProfile(OwnProfileResponse profile) {
         assertThat(profile.getGender()).isEqualTo(member.getMemberProfile().getGender());
         assertThat(profile.getMannerDegree()).isEqualTo(
             member.getMemberProfile().getMannerDegree());
-    }
-
-    private void assertPets(OwnProfileResponse profile) {
         assertThat(profile.getPetCount()).isEqualTo(member.getPets().size());
         assertThat(profile.getPets().get(0).getId()).isEqualTo(member.getPets().get(0).getId());
         assertThat(profile.getPets().get(1).getId()).isEqualTo(member.getPets().get(1).getId());
+        assertThat(profile.getFollowerCount()).isEqualTo(followerCount);
+        assertThat(profile.getFollowingCount()).isEqualTo(followingCount);
     }
+
 }
