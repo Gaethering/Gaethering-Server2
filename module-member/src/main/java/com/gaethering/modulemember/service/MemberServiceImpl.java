@@ -2,12 +2,14 @@ package com.gaethering.modulemember.service;
 
 import com.gaethering.moduledomain.repository.member.MemberRepository;
 import com.gaethering.modulemember.exception.DuplicatedEmailException;
+import com.gaethering.modulemember.exception.FailedSendEmailException;
 import com.gaethering.modulemember.exception.InvalidEmailAuthCodeException;
 import com.gaethering.modulemember.util.RedisUtil;
 import java.util.UUID;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberServiceImpl implements MemberService {
@@ -44,7 +47,9 @@ public class MemberServiceImpl implements MemberService {
 
             javaMailSender.send(message);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("fail to send email: {}", e.getMessage());
+
+            throw new FailedSendEmailException();
         }
 
         redisUtil.setDataExpire(authCode, email, 60 * 5L);
