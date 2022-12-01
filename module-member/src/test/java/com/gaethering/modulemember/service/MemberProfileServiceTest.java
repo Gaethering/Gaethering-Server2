@@ -2,6 +2,7 @@ package com.gaethering.modulemember.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
@@ -9,6 +10,7 @@ import com.gaethering.moduledomain.domain.member.Member;
 import com.gaethering.moduledomain.domain.member.MemberProfile;
 import com.gaethering.moduledomain.domain.member.Pet;
 import com.gaethering.moduledomain.domain.type.Gender;
+import com.gaethering.moduledomain.repository.follow.FollowRepository;
 import com.gaethering.moduledomain.repository.member.MemberRepository;
 import com.gaethering.modulemember.dto.OwnProfileResponse;
 import com.gaethering.modulemember.exception.errorcode.MemberErrorCode;
@@ -27,6 +29,8 @@ class MemberProfileServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
+    @Mock
+    private FollowRepository followRepository;
     @InjectMocks
     private MemberProfileServiceImpl memberProfileService;
 
@@ -75,8 +79,14 @@ class MemberProfileServiceTest {
     @Test
     public void getOwnProfileSuccess() {
         //given
+        Long followerCount = 3L;
+        Long followingCount = 30L;
         given(memberRepository.findByEmail(anyString()))
             .willReturn(Optional.of(member));
+        given(followRepository.countByFollowee(any(member.getClass())))
+            .willReturn(followerCount);
+        given(followRepository.countByFollower(any(member.getClass())))
+            .willReturn(followingCount);
 
         //when
         OwnProfileResponse profile = memberProfileService.getOwnProfile(anyString());
@@ -85,6 +95,8 @@ class MemberProfileServiceTest {
         assertMember(profile);
         assertMemberProfile(profile);
         assertPets(profile);
+        assertThat(profile.getFollowerCount()).isEqualTo(followerCount);
+        assertThat(profile.getFollowingCount()).isEqualTo(followingCount);
     }
 
     private void assertMember(OwnProfileResponse profile) {
