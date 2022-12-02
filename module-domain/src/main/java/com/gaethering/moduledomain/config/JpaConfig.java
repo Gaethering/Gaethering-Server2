@@ -1,4 +1,4 @@
-package com.gaethering.modulemember.config;
+package com.gaethering.moduledomain.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;

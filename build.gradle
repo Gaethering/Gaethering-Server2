@@ -56,7 +56,9 @@ subprojects {
                                 "**/*Config*",
                                 "**/*Input*",
                                 "**/*Interceptor*",
-                                "**/*Error*"
+                                "**/*Error*",
+                                "**/*Exception*",
+                                "**/type/**"
                         ])
                     })
             )
@@ -91,7 +93,9 @@ subprojects {
                         '**.*Config*',
                         '**.*Input*',
                         "**.*Interceptor*",
-                        "**/*Error*"
+                        "**.*Error*",
+                        "**.*Exception*",
+                        "**.type.*"
                 ]
             }
         }
