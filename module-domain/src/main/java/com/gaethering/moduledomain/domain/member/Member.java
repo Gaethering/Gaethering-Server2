@@ -1,22 +1,14 @@
 package com.gaethering.moduledomain.domain.member;
 
 import com.gaethering.moduledomain.domain.basic.BaseTimeEntity;
+import com.gaethering.moduledomain.domain.board.Comment;
 import com.gaethering.moduledomain.domain.type.MemberRole;
 import com.gaethering.moduledomain.domain.type.MemberStatus;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -58,9 +50,21 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private List<Pet> pets = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "member",
+            cascade =  CascadeType.REMOVE,
+            orphanRemoval = true
+    )
+    private List<Comment> comments = new ArrayList<>();
+
     public void addPet(Pet pet) {
         pet.setMember(this);
         pets.add(pet);
+    }
+
+    public void addComment (Comment comment) {
+        comment.setMember(this);
+        comments.add(comment);
     }
 
 }
