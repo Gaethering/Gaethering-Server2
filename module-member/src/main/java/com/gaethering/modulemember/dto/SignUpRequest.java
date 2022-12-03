@@ -1,5 +1,6 @@
 package com.gaethering.modulemember.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gaethering.moduledomain.domain.type.Gender;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
@@ -28,5 +29,8 @@ public class SignUpRequest {
     private LocalDate birth;
 
     private Gender gender;
+
+    @JsonProperty("isEmailAuth")
+    private boolean isEmailAuth;
 
 }
