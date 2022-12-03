@@ -1,7 +1,7 @@
 package com.gaethering.modulemember.service;
 
 import com.gaethering.moduledomain.repository.member.MemberRepository;
-import com.gaethering.modulemember.exception.DuplicatedEmailException;
+import com.gaethering.modulemember.exception.member.DuplicatedEmailException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
