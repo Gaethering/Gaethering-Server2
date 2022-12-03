@@ -19,6 +19,14 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    @PostMapping("/sign-up")
+    public ResponseEntity<Void> signUp(@RequestBody SignUpRequest signUpRequest) {
+
+        memberService.signUp(signUpRequest);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
     @PostMapping("/email-auth")
     public ResponseEntity<Void> sendEmailAuthCode(@RequestBody EmailAuthRequest emailAuthRequest) {
         memberService.sendEmailAuthCode(emailAuthRequest.getEmail());
