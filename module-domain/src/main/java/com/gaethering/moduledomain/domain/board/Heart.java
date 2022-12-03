@@ -28,4 +28,7 @@ public class Heart {
     public void setPost (Post post) {
         this.post = post;
     }
+    public void setMember (Member member) {
+        this.member = member;
+    }
 }
