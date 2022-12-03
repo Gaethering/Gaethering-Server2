@@ -1,7 +1,8 @@
-package com.gaethering.modulemember.exception;
+package com.gaethering.modulemember.exception.handler;
 
 import com.gaethering.modulecore.exception.ErrorResponse;
-import javax.mail.SendFailedException;
+import com.gaethering.modulemember.exception.errorcode.MemberErrorCode;
+import com.gaethering.modulemember.exception.member.MemberException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleMemberException(MemberException e) {
 
         ErrorResponse response = ErrorResponse.builder()
-            .code(e.getMemberErrorCode().getCode())
+            .code(e.getErrorCode().getCode())
             .message(e.getMessage())
             .build();
 

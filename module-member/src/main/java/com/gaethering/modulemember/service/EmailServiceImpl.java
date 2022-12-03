@@ -1,7 +1,7 @@
 package com.gaethering.modulemember.service;
 
-import com.gaethering.modulemember.exception.FailedSendEmailException;
-import com.gaethering.modulemember.exception.InvalidEmailAuthCodeException;
+import com.gaethering.modulemember.exception.member.FailedSendEmailException;
+import com.gaethering.modulemember.exception.member.InvalidEmailAuthCodeException;
 import com.gaethering.modulemember.util.RedisUtil;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
