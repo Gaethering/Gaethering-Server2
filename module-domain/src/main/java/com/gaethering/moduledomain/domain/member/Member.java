@@ -50,21 +50,12 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private List<Pet> pets = new ArrayList<>();
 
-    @OneToMany(
-            mappedBy = "member",
-            cascade =  CascadeType.REMOVE,
-            orphanRemoval = true
-    )
+    @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
 
     public void addPet(Pet pet) {
         pet.setMember(this);
         pets.add(pet);
-    }
-
-    public void addComment (Comment comment) {
-        comment.setMember(this);
-        comments.add(comment);
     }
 
 }
