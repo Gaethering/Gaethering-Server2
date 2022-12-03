@@ -1,7 +1,6 @@
 package com.gaethering.moduledomain.domain.member;
 
 import com.gaethering.moduledomain.domain.basic.BaseTimeEntity;
-import com.gaethering.moduledomain.domain.board.Comment;
 import com.gaethering.moduledomain.domain.type.MemberRole;
 import com.gaethering.moduledomain.domain.type.MemberStatus;
 import java.time.LocalDateTime;
@@ -49,9 +48,6 @@ public class Member extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member")
     private List<Pet> pets = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member")
-    private List<Comment> comments = new ArrayList<>();
 
     public void addPet(Pet pet) {
         pet.setMember(this);
