@@ -19,7 +19,6 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ImageUploadServiceImpl implements ImageUploadService {
 
     private final AmazonS3 amazonS3;
@@ -39,22 +38,13 @@ public class ImageUploadServiceImpl implements ImageUploadService {
         objectMetadata.setContentLength(multipartFile.getSize());
         objectMetadata.setContentType(multipartFile.getContentType());
 
-        log.info("multipartFile contentType={}", multipartFile.getContentType());
-
         try {
-            log.info("multipartFile.getInputStream={}", multipartFile.getInputStream());
-            log.info("objectMetadata={}", objectMetadata.getContentLength());
-
             amazonS3.putObject(new PutObjectRequest(bucket + "/" + dir, fileName, multipartFile.getInputStream(), objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
 
         } catch(IOException e) {
             throw new FailedUploadImageException();
         }
-
-        log.info("uuid={}", UUID.randomUUID().toString());
-        log.info("uuid concat={}", UUID.randomUUID().toString().concat(getFileExtension(fileName)));
-        log.info("file url={}", amazonS3.getUrl(bucket, "pet-profile/" + fileName));
 
         return amazonS3.getUrl(bucket, dir + "/" + fileName).toString();
     }
