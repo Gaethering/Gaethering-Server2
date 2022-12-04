@@ -32,10 +32,10 @@ public class PetServiceImpl implements PetService {
                 .orElseThrow(PetNotFoundException::new);
 
         if (!defaultImageUrl.equals(pet.getImageUrl())) {
-            imageUploadService.removePetImage(pet.getImageUrl());
+            imageUploadService.removeImage(pet.getImageUrl());
         }
 
-        String newImageUrl = imageUploadService.uploadPetImage(multipartFile);
+        String newImageUrl = imageUploadService.uploadImage(multipartFile);
         pet.updateImage(newImageUrl);
 
         return newImageUrl;

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ImageUploadServiceImpl implements ImageUploadService {
 
     private final AmazonS3 amazonS3;
@@ -30,7 +32,7 @@ public class ImageUploadServiceImpl implements ImageUploadService {
     private String dir;
 
     @Override
-    public String uploadPetImage(MultipartFile multipartFile) {
+    public String uploadImage(MultipartFile multipartFile) {
 
         String fileName = createFileName(multipartFile.getOriginalFilename());
 
@@ -50,7 +52,7 @@ public class ImageUploadServiceImpl implements ImageUploadService {
     }
 
     @Override
-    public void removePetImage(String filename) {
+    public void removeImage(String filename) {
         amazonS3.deleteObject(bucket,
                 dir + "/" + filename.substring( filename.lastIndexOf("/") + 1));
     }

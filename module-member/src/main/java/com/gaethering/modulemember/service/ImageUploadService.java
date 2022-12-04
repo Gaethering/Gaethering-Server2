@@ -4,9 +4,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ImageUploadService {
 
-    String uploadPetImage(MultipartFile multipartFile);
+    String uploadImage(MultipartFile multipartFile);
 
-    void removePetImage(String filename);
+    void removeImage(String filename);
 
     String createFileName(String filename);
 

@@ -41,7 +41,7 @@ class ImageUploadServiceTest {
 
         // when
         InvalidImageTypeException exception = Assertions.assertThrows(InvalidImageTypeException.class,
-                () -> imageUploadService.uploadPetImage(file));
+                () -> imageUploadService.uploadImage(file));
 
         // then
         assertThat(exception.getErrorCode()).isEqualTo(PetErrorCode.INVALID_IMAGE_TYPE);
@@ -57,7 +57,7 @@ class ImageUploadServiceTest {
         MockMultipartFile file = new MockMultipartFile("test", filename, contentType, "test".getBytes());
 
         // when
-        String urlPath = imageUploadService.uploadPetImage(file);
+        String urlPath = imageUploadService.uploadImage(file);
 
         // then
         assertThat(urlPath.substring(0, urlPath.lastIndexOf("/") + 1)).isEqualTo(path);
