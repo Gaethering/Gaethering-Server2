@@ -7,7 +7,10 @@ import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -22,6 +25,7 @@ public class JwtProvider {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
     private final RedisUtil redisUtil;
+    private final UserDetailsService userDetailsService;
 
     @Value("${spring.jwt.secret}")
     private String key;
@@ -74,6 +78,14 @@ public class JwtProvider {
 
         return new ReissueTokenResponse(accessToken);
     }
+    public Authentication getAuthentication(String accessToken) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(getUserEmail(accessToken));
+        return new UsernamePasswordAuthenticationToken(userDetails, "",
+                userDetails.getAuthorities());
+    }
 
+    public String getUserEmail(String token) {
+        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody().getSubject();
+    }
 }
 
