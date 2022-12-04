@@ -3,6 +3,7 @@ package com.gaethering.modulemember.exception.handler;
 import com.gaethering.modulecore.exception.ErrorResponse;
 import com.gaethering.modulemember.exception.errorcode.MemberErrorCode;
 import com.gaethering.modulemember.exception.member.MemberException;
+import com.gaethering.modulemember.exception.pet.PetException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,17 @@ public class GlobalExceptionHandler {
             .code(MemberErrorCode.FAILED_SEND_EMAIL.getCode())
             .message(MemberErrorCode.FAILED_SEND_EMAIL.getMessage())
             .build();
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PetException.class)
+    public ResponseEntity<ErrorResponse> handlePetException(PetException e) {
+
+        ErrorResponse response = ErrorResponse.builder()
+                .code(e.getErrorCode().getCode())
+                .message(e.getMessage())
+                .build();
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
