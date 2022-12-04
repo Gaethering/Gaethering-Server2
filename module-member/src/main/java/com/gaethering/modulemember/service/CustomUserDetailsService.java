@@ -3,6 +3,8 @@ package com.gaethering.modulemember.service;
 import com.gaethering.moduledomain.domain.member.Member;
 import com.gaethering.moduledomain.domain.type.MemberStatus;
 import com.gaethering.moduledomain.repository.member.MemberRepository;
+import com.gaethering.modulemember.exception.member.DormantUserException;
+import com.gaethering.modulemember.exception.member.InActiveUserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -25,9 +27,9 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         if(MemberStatus.INACTIVE == member.getStatus()) {
-            throw new RuntimeException("비활성화된 계정입니다.");
+            throw new InActiveUserException();
         } else if (MemberStatus.DORMANT == member.getStatus()) {
-            throw new RuntimeException("휴면 계정입니다.");
+            throw new DormantUserException();
         }
 
         return new User(member.getEmail(), member.getPassword(),

@@ -2,11 +2,15 @@ package com.gaethering.modulemember.service;
 
 import com.gaethering.moduledomain.repository.member.MemberRepository;
 import com.gaethering.modulemember.dto.*;
+import com.gaethering.modulemember.exception.errorcode.MemberErrorCode;
 import com.gaethering.modulemember.exception.member.DuplicatedEmailException;
 
 import java.util.Objects;
 import java.util.UUID;
 
+import com.gaethering.modulemember.exception.member.InvalidTokenException;
+import com.gaethering.modulemember.exception.member.TokenIncorrectException;
+import com.gaethering.modulemember.exception.member.TokenNotExistException;
 import com.gaethering.modulemember.jwt.JwtProvider;
 import com.gaethering.modulemember.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
@@ -76,7 +80,7 @@ public class MemberServiceImpl implements MemberService {
     public ReissueTokenResponse reissue(ReissueTokenRequest request) {
 
         if (!jwtProvider.validateTokenExpiration(request.getRefreshToken())) {
-            throw new RuntimeException("refresh token 정보가 유효하지 않습니다.");
+            throw new InvalidTokenException(MemberErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         Authentication authentication = jwtProvider.getAuthentication(request.getAccessToken());
@@ -85,11 +89,11 @@ public class MemberServiceImpl implements MemberService {
         String refreshToken = redisUtil.getData(email);
 
         if (Objects.isNull(refreshToken)) {
-            throw new RuntimeException("refresh token 정보가 존재하지 않습니다.");
+            throw new TokenNotExistException(MemberErrorCode.NOT_EXIST_REFRESH_TOKEN);
         }
 
         if (!request.getRefreshToken().equals(refreshToken)) {
-            throw new RuntimeException("refresh token 정보가 일치하지 않습니다.");
+            throw new TokenIncorrectException(MemberErrorCode.INCORRECT_REFRESH_TOKEN);
         }
 
         return jwtProvider.reissueAccessToken(email);
@@ -98,9 +102,8 @@ public class MemberServiceImpl implements MemberService {
         String accessToken = request.getAccessToken();
 
         if(!jwtProvider.validateTokenExpiration(accessToken)) {
-            throw new RuntimeException("access token 정보가 유효하지 않습니다.");
+            throw new InvalidTokenException(MemberErrorCode.INVALID_ACCESS_TOKEN);
         }
-
 
         Authentication authentication = jwtProvider.getAuthentication(request.getAccessToken());
         String email = authentication.getName();
