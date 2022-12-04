@@ -50,6 +50,10 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void signUp(SignUpRequest signUpRequest) {
 
+        if (memberRepository.existsByEmail(signUpRequest.getEmail())) {
+            throw new DuplicatedEmailException();
+        }
+
         memberRepository.save(Member.builder()
             .email(signUpRequest.getEmail())
             .nickname(signUpRequest.getNickname())
