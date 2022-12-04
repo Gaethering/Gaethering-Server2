@@ -8,6 +8,6 @@ public interface MemberService {
 
     void confirmEmailAuthCode(String code);
 
-    void signUp(SignUpRequest signUpRequest);
+    String signUp(SignUpRequest signUpRequest);
 
 }

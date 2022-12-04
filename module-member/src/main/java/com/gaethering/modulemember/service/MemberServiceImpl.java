@@ -49,7 +49,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public void signUp(SignUpRequest signUpRequest) {
+    public String signUp(SignUpRequest signUpRequest) {
 
         if (memberRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new DuplicatedEmailException();
@@ -59,7 +59,7 @@ public class MemberServiceImpl implements MemberService {
             throw new NotMatchPasswordException();
         }
 
-        memberRepository.save(Member.builder()
+        Member newMember = Member.builder()
             .email(signUpRequest.getEmail())
             .nickname(signUpRequest.getNickname())
             .password(passwordEncoder.encode(signUpRequest.getPassword()))
@@ -70,7 +70,11 @@ public class MemberServiceImpl implements MemberService {
                 .phoneNumber(signUpRequest.getPhone())
                 .gender(signUpRequest.getGender())
                 .build())
-            .build());
+            .build();
+
+        memberRepository.save(newMember);
+
+        return newMember.getNickname();
     }
 
 }
