@@ -60,6 +60,6 @@ class ImageUploadServiceTest {
         String urlPath = imageUploadService.uploadPetImage(file);
 
         // then
-        assertThat(urlPath.substring(0, urlPath.lastIndexOf("/") + 1)).isEqualTo("http://127.0.0.1:8001/test-bucket/test-dir/");
+        assertThat(urlPath.substring(0, urlPath.lastIndexOf("/") + 1)).isEqualTo(path);
     }
 }
