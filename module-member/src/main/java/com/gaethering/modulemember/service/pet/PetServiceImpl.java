@@ -2,6 +2,7 @@ package com.gaethering.modulemember.service.pet;
 
 import com.gaethering.moduledomain.domain.member.Pet;
 import com.gaethering.moduledomain.repository.pet.PetRepository;
+import com.gaethering.modulemember.exception.pet.ImageNotFoundException;
 import com.gaethering.modulemember.exception.pet.PetNotFoundException;
 import com.gaethering.modulemember.service.ImageUploadService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,10 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public String updatePetImage(Long id, MultipartFile multipartFile) {
+        if (multipartFile.isEmpty()) {
+            throw new ImageNotFoundException();
+        }
+
         Pet pet = petRepository.findById(id)
                 .orElseThrow(PetNotFoundException::new);
 

@@ -17,9 +17,6 @@ public class PetController {
     @PatchMapping("/mypage/pets/{petId}/image")
     public ResponseEntity<String> updatePetImage(@PathVariable("petId") Long id,
                                                  @RequestPart("file") MultipartFile multipartFile) {
-        if (multipartFile.isEmpty()) {
-            throw new ImageNotFoundException();
-        }
 
         return ResponseEntity.ok(petService.updatePetImage(id, multipartFile));
     }
