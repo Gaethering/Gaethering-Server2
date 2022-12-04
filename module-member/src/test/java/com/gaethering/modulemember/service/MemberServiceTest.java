@@ -14,6 +14,7 @@ import com.gaethering.moduledomain.repository.member.MemberRepository;
 import com.gaethering.modulemember.dto.SignUpRequest;
 import com.gaethering.modulemember.exception.errorcode.MemberErrorCode;
 import com.gaethering.modulemember.exception.member.DuplicatedEmailException;
+import com.gaethering.modulemember.exception.member.NotMatchPasswordException;
 import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -96,6 +97,34 @@ class MemberServiceTest {
 
         //then
         assertEquals(MemberErrorCode.DUPLICATED_EMAIL.getCode(),
+            exception.getErrorCode().getCode());
+    }
+
+    @Test
+    @DisplayName("회원가입 실패_비밀번호가 일치하지 않는 경우")
+    void signUp_ExceptionThrown_NotMatchPassword() {
+        //given
+        SignUpRequest request = SignUpRequest.builder()
+            .email("gaethering@gmail.com")
+            .nickname("개더링")
+            .password("1234qwer!")
+            .passwordCheck("1234qwer")
+            .name("김진호")
+            .phone("010-3230-2498")
+            .birth(LocalDate.of(2022, 02, 15))
+            .gender(Gender.MALE)
+            .isEmailAuth(true)
+            .build();
+
+        given(memberRepository.existsByEmail(anyString()))
+            .willReturn(false);
+
+        //when
+        NotMatchPasswordException exception = assertThrows(
+            NotMatchPasswordException.class, () -> memberService.signUp(request));
+
+        //then
+        assertEquals(MemberErrorCode.NOT_MATCH_PASSWORD.getCode(),
             exception.getErrorCode().getCode());
     }
 
