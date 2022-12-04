@@ -1,10 +1,7 @@
 package com.gaethering.modulemember.service;
 
 import com.gaethering.moduledomain.repository.member.MemberRepository;
-import com.gaethering.modulemember.dto.LoginRequest;
-import com.gaethering.modulemember.dto.LoginResponse;
-import com.gaethering.modulemember.dto.ReissueTokenRequest;
-import com.gaethering.modulemember.dto.ReissueTokenResponse;
+import com.gaethering.modulemember.dto.*;
 import com.gaethering.modulemember.exception.member.DuplicatedEmailException;
 
 import java.util.Objects;
@@ -97,5 +94,20 @@ public class MemberServiceImpl implements MemberService {
 
         return jwtProvider.reissueAccessToken(email);
     }
+    public void logout (LogoutRequest request) {
+        String accessToken = request.getAccessToken();
 
+        if(!jwtProvider.validateTokenExpiration(accessToken)) {
+            throw new RuntimeException("access token 정보가 유효하지 않습니다.");
+        }
+
+
+        Authentication authentication = jwtProvider.getAuthentication(request.getAccessToken());
+        String email = authentication.getName();
+
+        redisUtil.deleteData(email);
+
+        Long expiration = jwtProvider.getExpiration(accessToken);
+        redisUtil.setBlackList(accessToken, "accessToken", expiration);
+    }
 }

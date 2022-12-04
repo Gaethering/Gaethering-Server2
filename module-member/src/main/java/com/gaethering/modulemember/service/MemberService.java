@@ -1,9 +1,6 @@
 package com.gaethering.modulemember.service;
 
-import com.gaethering.modulemember.dto.LoginRequest;
-import com.gaethering.modulemember.dto.LoginResponse;
-import com.gaethering.modulemember.dto.ReissueTokenRequest;
-import com.gaethering.modulemember.dto.ReissueTokenResponse;
+import com.gaethering.modulemember.dto.*;
 
 public interface MemberService {
 
@@ -15,4 +12,5 @@ public interface MemberService {
 
     ReissueTokenResponse reissue (ReissueTokenRequest request);
 
+    void logout (LogoutRequest request);
 }
