@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Primary;
 public class AwsS3MockConfig {
 
     @Value("${cloud.aws.s3.bucket}")
-    public String bucket;
+    private String bucket;
 
     @Value("${cloud.aws.region.static}")
     private String region;
