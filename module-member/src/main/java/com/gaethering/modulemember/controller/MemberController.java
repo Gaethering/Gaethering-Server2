@@ -3,6 +3,7 @@ package com.gaethering.modulemember.controller;
 import com.gaethering.modulemember.dto.ConfirmEmailRequest;
 import com.gaethering.modulemember.dto.ConfirmEmailResponse;
 import com.gaethering.modulemember.dto.EmailAuthRequest;
+import com.gaethering.modulemember.dto.SignUpRequest;
 import com.gaethering.modulemember.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
+
+    @PostMapping("/sign-up")
+    public ResponseEntity<Void> signUp(@RequestBody SignUpRequest signUpRequest) {
+
+        memberService.signUp(signUpRequest);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 
     @PostMapping("/email-auth")
     public ResponseEntity<Void> sendEmailAuthCode(@RequestBody EmailAuthRequest emailAuthRequest) {
