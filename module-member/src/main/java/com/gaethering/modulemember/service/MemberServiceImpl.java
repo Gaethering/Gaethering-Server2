@@ -7,6 +7,7 @@ import com.gaethering.moduledomain.domain.type.MemberStatus;
 import com.gaethering.moduledomain.repository.member.MemberRepository;
 import com.gaethering.modulemember.dto.SignUpRequest;
 import com.gaethering.modulemember.exception.member.DuplicatedEmailException;
+import com.gaethering.modulemember.exception.member.NotMatchPasswordException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +53,10 @@ public class MemberServiceImpl implements MemberService {
 
         if (memberRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new DuplicatedEmailException();
+        }
+
+        if (!signUpRequest.getPassword().equals(signUpRequest.getPasswordCheck())) {
+            throw new NotMatchPasswordException();
         }
 
         memberRepository.save(Member.builder()
