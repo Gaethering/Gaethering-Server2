@@ -28,6 +28,6 @@ cloud:
 
 dir: test-dir
 default:
-  test-image-url: http://127.0.0.1:8001/test-bucket/test-dir/4a95753d-1827-43c5-b9a0-2359186aedec.png
+  image-url: http://127.0.0.1:8001/test-bucket/test-dir/4a95753d-1827-43c5-b9a0-2359186aedec.png
 
 api-prefix: /api
